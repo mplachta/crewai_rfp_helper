@@ -6,9 +6,10 @@ import time
 base_url = st.secrets["base_url"]
 bearer_token = st.secrets["bearer_token"]
 headers = {"Authorization": f"Bearer {bearer_token}"}
+polling_time = 10
 
 def poll_status(kickoff_id):
-    max_polling_time = 120 # seconds
+    max_polling_time = 240 # seconds
 
     while max_polling_time > 0: 
         status_response = requests.get(f"{base_url}/status/{kickoff_id}", headers=headers)
@@ -22,8 +23,8 @@ def poll_status(kickoff_id):
         else:
             # st.error(f"Error: {status_response.text}")
             pass
-        time.sleep(3)
-        max_polling_time -= 3
+        time.sleep(polling_time)
+        max_polling_time -= polling_time
     
     if max_polling_time == 0:
         st.error("Timeout: The agent did not complete the conversation within the allowed time.")
